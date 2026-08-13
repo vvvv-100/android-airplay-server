@@ -1,0 +1,44 @@
+name: Build AAR and Publish to Release
+
+on:
+  workflow_dispatch: 
+    inputs:
+      tag_name:
+        description: '请输入你要发布的版本号 (例如: v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+# 必须赋予 GitHub Actions 创建 Release 和上传文件的写权限
+permissions:
+  contents: write 
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive # 必须带上这个，拉取底层的 C++ 依赖库
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Make gradlew executable
+        run: chmod +x ./gradlew
+
+      - name: Build Release AAR
+        run: ./gradlew :app:assembleRelease
+
+      - name: Upload AAR to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event.inputs.tag_name }}
+          name: AirPlay Library ${{ github.event.inputs.tag_name }}
+          body: "Auto-generated AAR build via GitHub Actions."
+          files: app/build/outputs/aar/*.aar # 自动抓取编译出来的 aar 文件
+          draft: false
+          prerelease: false
