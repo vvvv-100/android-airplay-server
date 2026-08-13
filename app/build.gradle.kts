@@ -1,5 +1,5 @@
 plugins {
-    alias(libs.plugins.android.application)
+    id("com.android.library")
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
@@ -30,8 +30,7 @@ android {
         }
     }
 
-    defaultConfig {
-        applicationId = "io.github.jqssun.airplay"
+    defaultConfig {        
         minSdk = 24
         targetSdk = 36
         versionCode = 30
@@ -75,10 +74,7 @@ android {
         }
     }
 
-    dependenciesInfo {
-        includeInApk = false
-        includeInBundle = false
-    }
+
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
