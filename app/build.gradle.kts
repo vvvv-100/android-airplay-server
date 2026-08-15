@@ -53,7 +53,7 @@ android {
             ndk { abiFilters += allAbis }
         }
         release {
-            isMinifyEnabled = true
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
             signingConfigs.findByName("release")?.let { signingConfig = it }
             ndk { abiFilters += allAbis }
